@@ -12,7 +12,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-gold">Create New Jewelry</h1>
-        <form method="POST" action="{{ url_for('create_jewelry') }}" class="bg-dark p-4 rounded shadow-sm">
+        <form method="POST" action="{{ url_for('create_jewelry') }}" class="bg-dark p-4 rounded shadow-sm" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label text-gold">Title</label>
                 <input type="text" class="form-control" id="title" name="title" required>
@@ -20,7 +20,7 @@
 
             <div class="mb-3">
                 <label for="description" class="form-label text-gold">Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
             </div>
 
             <div class="mb-3">
@@ -29,8 +29,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="image" class="form-label text-gold">Image URL</label>
-                <input type="text" class="form-control" id="image" name="image" required>
+                <label for="image" class="form-label text-gold">Upload Image</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
             </div>
 
             <button type="submit" class="btn btn-gold">Create Jewelry</button>

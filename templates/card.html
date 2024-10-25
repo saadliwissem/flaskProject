@@ -65,7 +65,8 @@
 <!-- Card HTML -->
 <div class="col-md-4 mb-5">
   <div class="card">
-    <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}" />
+    <!-- Updated image source to use the Cloudinary URL -->
+    <img src="https://res.cloudinary.com/dz8bpdmg5/image/upload/{{item.image }}" class="card-img-top" alt="{{ item.title }}" />
     <div class="card-body">
       <h5 class="card-title">{{ item.title }}</h5>
       <p class="card-text">Price: ${{ item.price }}</p>

@@ -7,6 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import logging
 import secrets  # For generating tokens
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 app = Flask(__name__)
 
@@ -18,8 +21,11 @@ logger = logging.getLogger(__name__)
 # Secret key for session management
 app.secret_key = 'your_secret_key'
 
+
+
 # Load environment variables from the .env file
 load_dotenv()
+
 
 # Retrieve the database credentials from environment variables
 db_user = os.getenv('DB_USER')
@@ -33,6 +39,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
+# Load Cloudinary configuration
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
 
 # User model
 class User(db.Model):
@@ -86,15 +99,25 @@ def create_jewelry():
         title = request.form['title']
         description = request.form['description']
         price = float(request.form['price'])
-        image = request.form['image']
+        image_file = request.files['image']  # Get the uploaded image file
 
-        # Create a new JewelryItem
-        new_item = JewelryItem(title=title, description=description, price=price, image=image)
-        db.session.add(new_item)
-        db.session.commit()
+        # Upload the image to Cloudinary
+        if image_file:
+            upload_result = cloudinary.uploader.upload(image_file)
+            image_public_id = upload_result['public_id']  # Get the public ID of the uploaded image
 
-        flash('Jewelry item created successfully!')
-        return redirect(url_for('manage_jewelry'))
+            # Create a new JewelryItem with the Cloudinary public ID
+            new_item = JewelryItem(
+                title=title,
+                description=description,
+                price=price,
+                image=image_public_id  # Save the public ID
+            )
+            db.session.add(new_item)
+            db.session.commit()
+
+            flash('Jewelry item created successfully!')
+            return redirect(url_for('manage_jewelry'))
 
     return render_template('create_jewelry.html')
 
@@ -108,8 +131,15 @@ def update_jewelry(item_id):
         item.title = request.form['title']
         item.description = request.form['description']
         item.price = float(request.form['price'])
-        item.image = request.form['image']
 
+        # Check if an image file is uploaded
+        if 'image' in request.files and request.files['image'].filename != '':
+            # Upload to Cloudinary
+            image_file = request.files['image']
+            upload_result = cloudinary.uploader.upload(image_file)
+            item.image = upload_result['public_id']  # Use the public ID from Cloudinary
+
+        # If no new image is uploaded, keep the existing image
         db.session.commit()
 
         flash('Jewelry item updated successfully!')
