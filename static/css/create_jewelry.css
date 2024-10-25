@@ -1,0 +1,37 @@
+body {
+    background: linear-gradient(90deg, #1e1e1e, #3b3b3b);
+    color: #d4af37;
+    font-family: Raleway, sans-serif;
+}
+
+.text-gold {
+    color: #d4af37;
+}
+
+.form-control {
+    background-color: #2e2e2e;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+}
+
+.form-control:focus {
+    background-color: #2e2e2e;
+    color: #d4af37;
+    border-color: #b2923b;
+    box-shadow: none;
+}
+
+.bg-dark {
+    background-color: #2b2b2b;
+}
+
+.btn-gold {
+    background-color: #d4af37;
+    color: #1e1e1e;
+    border: none;
+}
+
+.btn-gold:hover {
+    background-color: #b2923b;
+    color: #fff;
+}

@@ -1,0 +1,47 @@
+body {
+    background: linear-gradient(90deg, #1e1e1e, #3b3b3b);
+    color: #d4af37;
+    font-family: Raleway, sans-serif;
+}
+
+.text-gold {
+    color: #d4af37;
+}
+
+.btn-gold {
+    background-color: #d4af37;
+    color: #1e1e1e;
+    border: none;
+}
+
+.btn-gold:hover {
+    background-color: #b2923b;
+    color: #fff;
+}
+
+.table-dark {
+    background-color: #292929;
+}
+
+.table-dark th, .table-dark td {
+    border-color: #3b3b3b;
+}
+
+.thead-gold th {
+    background-color: #d4af37;
+    color: #1e1e1e;
+}
+
+.btn-warning {
+    background-color: #b2923b;
+    border-color: #b2923b;
+}
+
+.btn-danger {
+    background-color: #cc3333;
+    border-color: #b92a2a;
+}
+
+.btn-warning:hover, .btn-danger:hover {
+    color: #fff;
+}
