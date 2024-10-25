@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}"
+    />
+    <title>Login</title>
+  </head>
+  <div class="container">
+    <div class="screen">
+      <div class="screen__content">
+        <!-- Flash message for errors -->
+        {% if messages %} {% for message in messages %}
+        <div class="flash-messages" id="flash-messages">{{ message }}</div>
+        {% endfor %} {% endif %}
+
+        <script>
+          // JavaScript to make the flash message fade out after 5 seconds
+          setTimeout(function () {
+            const flashMessages = document.getElementById("flash-messages");
+            if (flashMessages) {
+              flashMessages.classList.add("hidden");
+            }
+          }, 4000); // 5000 milliseconds = 5 seconds
+        </script>
+
+        <form class="login" action="{{ url_for('login') }}" method="POST">
+          <div class="login__field">
+            <i class="login__icon fas fa-user"></i>
+            <input
+              type="text"
+              class="login__input"
+              name="username"
+              placeholder="User name / Email"
+              required
+            />
+          </div>
+          <div class="login__field">
+            <i class="login__icon fas fa-lock"></i>
+            <input
+              type="password"
+              class="login__input"
+              name="password"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button class="button login__submit" type="submit">
+            <span class="button__text">Log In Now</span>
+            <i class="button__icon fas fa-chevron-right"></i>
+          </button>
+        </form>
+
+        <div class="social-login">
+          no account?
+          <a
+            style="
+              text-decoration: none;
+              color: aliceblue;
+              text-decoration: underline;
+              margin-left: 10px;
+            "
+            href="/signup"
+          >
+            <h3>Register</h3></a
+          >
+        </div>
+      </div>
+      <div class="screen__background">
+        <span
+          class="screen__background__shape screen__background__shape4"
+        ></span>
+        <span
+          class="screen__background__shape screen__background__shape3"
+        ></span>
+        <span
+          class="screen__background__shape screen__background__shape2"
+        ></span>
+        <span
+          class="screen__background__shape screen__background__shape1"
+        ></span>
+      </div>
+    </div>
+  </div>
+</html>

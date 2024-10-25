@@ -1,0 +1,169 @@
+<!-- Custom CSS for the basket -->
+<style>
+    body {
+      background-color: #1c1c1c; /* Deep black background */
+      color: #fff; /* White text for contrast */
+      font-family: 'Roboto', sans-serif;
+    }
+  
+    .basket-container {
+      background-color: #282828; /* Slightly lighter black */
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Elegant shadow effect */
+      max-width: 1200px;
+      margin: 40px auto; /* Center the basket container */
+    }
+  
+    h2, h3 {
+      color: #FFD700; /* Golden color for headers */
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+  
+    .table {
+      background-color: #333; /* Dark background for the table */
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Box shadow to elevate table */
+    }
+  
+    .table th {
+      background-color: #444; /* Darker background for table header */
+      color: #FFD700; /* Golden text for table headers */
+      padding: 15px;
+      text-align: center;
+      border: none;
+    }
+  
+    .table td {
+      color: #fff; /* White text for table cells */
+      text-align: center;
+      vertical-align: middle;
+      padding: 15px;
+      border-top: 1px solid #555; /* Subtle borders between rows */
+    }
+  
+    .table img {
+      border-radius: 10px;
+      margin-right: 15px;
+      width: 60px;
+      height: auto;
+      transition: transform 0.3s;
+    }
+  
+    .table img:hover {
+      transform: scale(1.1); /* Slight zoom effect on hover */
+    }
+  
+    .btn {
+      border-radius: 50px;
+      padding: 10px 20px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+  
+    .btn-secondary {
+      background-color: #FFD700; /* Golden button */
+      color: #000;
+      font-weight: bold;
+    }
+  
+    .btn-secondary:hover {
+      background-color: #e6c200; /* Darker golden on hover */
+      transform: translateY(-2px); /* Slight lift on hover */
+    }
+  
+    .btn-danger {
+      background-color: #ff4d4d; /* Bright red for remove */
+      color: #fff;
+    }
+  
+    .btn-danger:hover {
+      background-color: #ff1a1a;
+      transform: translateY(-2px);
+    }
+  
+    .btn-success {
+      background-color: #FFD700; /* Golden color for the purchase button */
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  
+    .btn-success:hover {
+      background-color: #e6c200;
+      transform: translateY(-2px);
+    }
+  
+    h3 {
+      margin-top: 30px;
+      text-align: right;
+      font-size: 1.5rem;
+      color: #FFD700;
+    }
+  
+    .total-price {
+      font-weight: bold;
+    }
+  
+    @media (max-width: 768px) {
+      .basket-container {
+        padding: 20px;
+      }
+  
+      .table th, .table td {
+        padding: 10px;
+      }
+  
+      h2, h3 {
+        font-size: 1.5rem;
+      }
+    }
+</style>
+
+<!-- Basket Page Content -->
+<div class="basket-container">
+    <h2>Your Basket</h2>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item_id, item in basket.items() %}
+            <tr>
+                <td>
+                    <img src="{{ item.image }}" alt="{{ item.title }}" />
+                    {{ item.title }}
+                </td>
+                <td>
+                    <form action="{{ url_for('update_basket', item_id=item_id) }}" method="POST">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control d-inline" style="width: 70px;" />
+                        <button type="submit" class="btn btn-secondary btn-sm mt-1">Update</button>
+                    </form>
+                </td>
+                <td>${{ item.price }}</td>
+                <td>${{ item.price * item.quantity }}</td>
+                <td>
+                    <form action="{{ url_for('remove_from_basket', item_id=item_id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total Price: <span class="total-price">${{ total_price }}</span></h3>
+
+    <form action="{{ url_for('purchase') }}" method="POST" class="text-right">
+        <button type="submit" class="btn btn-success btn-lg">Proceed to Purchase</button>
+    </form>
+</div>

@@ -1,0 +1,78 @@
+<!-- Custom CSS for Card -->
+<style>
+  .card {
+    background-color: #282828; /* Dark background for the card */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Elegant shadow */
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); /* Increase shadow depth on hover */
+  }
+
+  .card-img-top {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    height: 250px; /* Fixed height for images */
+    object-fit: cover; /* Ensure image covers the area while keeping aspect ratio */
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    color: #FFD700; /* Golden title */
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .card-text {
+    font-size: 1rem;
+    color: #ddd; /* Light grey for text */
+    margin-bottom: 10px;
+  }
+
+  .btn-primary {
+    background-color: #FFD700; /* Golden button */
+    color: #000;
+    font-weight: bold;
+    border-radius: 50px;
+    padding: 10px 20px;
+    transition: background-color 0.3s, transform 0.3s;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #e6c200; /* Darker golden on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+
+  .input-group {
+    margin-top: 10px;
+  }
+
+  .input-group-append {
+    margin-left: auto; /* Align button to the right */
+  }
+</style>
+
+<!-- Card HTML -->
+<div class="col-md-4 mb-5">
+  <div class="card">
+    <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}" />
+    <div class="card-body">
+      <h5 class="card-title">{{ item.title }}</h5>
+      <p class="card-text">Price: ${{ item.price }}</p>
+      <p class="card-text">{{ item.description }}</p>
+      <form action="{{ url_for('add_to_basket', item_id=item.id) }}" method="POST">
+        <button type="submit" class="btn btn-primary btn-lg">Add to Basket</button>
+      </form>
+    </div>
+  </div>
+</div>

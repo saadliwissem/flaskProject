@@ -1,0 +1,23 @@
+/* Style for the logo */
+.navbar-logo {
+    width: 100%; /* Default width */
+    height: auto; /* Maintain aspect ratio */
+    max-width: 250px; /* Larger default size for logo */
+    max-height: 150px;
+}
+
+/* Navbar spacing for larger screens */
+.navbar-nav {
+    gap: 20px; /* Spacing between navbar items */
+}
+
+/* Increase logo size and adjust spacing on large screens */
+@media (min-width: 992px) {
+    .navbar-logo {
+        max-width: 300px; /* Increase the logo size on large screens */
+        max-height: 180px;
+    }
+    .navbar-nav {
+        gap: 10px; /* Reduce space between items */
+    }
+}
