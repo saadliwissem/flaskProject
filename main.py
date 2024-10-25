@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from functools import wraps
+from flask import Flask, flash, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
@@ -39,11 +40,14 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='user')  # Add role field with default 'user'
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, role='user'):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password, method='pbkdf2:sha256')
+        self.role = role  # Optionally set role during user creation
+
 
 # Protect routes using a decorator
 def login_required(f):
@@ -54,6 +58,76 @@ def login_required(f):
         return f(*args, **kwargs)
     wrapper.__name__ = f.__name__
     return wrapper
+
+# protected admin routes 
+def admin_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'role' not in session or session['role'] != 'admin':
+            logger.warning('Unauthorized access attempt to admin route.')
+            return redirect(url_for('home'))  # Redirect non-admin users to the login page
+        return f(*args, **kwargs)
+    return wrapper
+# manage jewelary routes 
+
+# Manage jewelry route (Admin view)
+@app.route('/admin/manage_jewelry')
+@admin_required
+def manage_jewelry():
+    jewelry_items = JewelryItem.query.all()
+    return render_template('manage_jewelry.html', jewelry_items=jewelry_items)
+
+
+# Admin: Create a new jewelry item
+@app.route('/admin/create_jewelry', methods=['GET', 'POST'])
+@admin_required
+def create_jewelry():
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        price = float(request.form['price'])
+        image = request.form['image']
+
+        # Create a new JewelryItem
+        new_item = JewelryItem(title=title, description=description, price=price, image=image)
+        db.session.add(new_item)
+        db.session.commit()
+
+        flash('Jewelry item created successfully!')
+        return redirect(url_for('manage_jewelry'))
+
+    return render_template('create_jewelry.html')
+
+# Admin: Update an existing jewelry item
+@app.route('/admin/update_jewelry/<int:item_id>', methods=['GET', 'POST'])
+@admin_required
+def update_jewelry(item_id):
+    item = JewelryItem.query.get_or_404(item_id)
+
+    if request.method == 'POST':
+        item.title = request.form['title']
+        item.description = request.form['description']
+        item.price = float(request.form['price'])
+        item.image = request.form['image']
+
+        db.session.commit()
+
+        flash('Jewelry item updated successfully!')
+        return redirect(url_for('manage_jewelry'))
+
+    return render_template('update_jewelry.html', item=item)
+
+# Admin: Delete a jewelry item
+@app.route('/admin/delete_jewelry/<int:item_id>', methods=['POST'])
+@admin_required
+def delete_jewelry(item_id):
+    item = JewelryItem.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+
+    flash('Jewelry item deleted successfully!')
+    return redirect(url_for('manage_jewelry'))
+
 
 # Main route to display the home page (protected route)
 # Sample jewelry items, replace this with your database query
@@ -94,15 +168,13 @@ def login():
 
         if user and check_password_hash(user.password, password):
             logger.debug(f"User found and password correct for: {user.username}")
-
             # Generate a token and store it in the session
-            session['token'] = secrets.token_hex(16)  # Generating a random token
-            session['username'] = user.username  # Store username in session for display purposes
-            logger.info(f"User '{username}' logged in successfully with token: {session['token']}")
-            
-            # Redirect to the home page after successful login
-            return redirect(url_for('home'))
+            session['token'] = secrets.token_hex(16)
+            session['username'] = user.username
+            session['role'] = user.role  # Store the user role in the session
+            logger.info(f"User '{username}' logged in successfully with token: {session['token']} and role: {user.role}")
 
+            return redirect(url_for('home'))
         else:
             logger.warning(f"Login failed for user '{username}'. Invalid username or password.")
             messages.append('Invalid username or password. Please try again.')
