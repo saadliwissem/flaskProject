@@ -1,14 +1,17 @@
 body {
-    background-color: #d3d3d3;
-    font-family: Arial, sans-serif;
-    text-align: center;
+  background: url("../images/lustre&co.PNG") no-repeat center center fixed;
+  background-size: cover; /* Ensures the image covers the whole page */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove default padding */
 }
 
 h1 {
-    color: #333;
+  color: #333;
 }
 
 a {
-    text-decoration: none;
-    color: #007bff;
+  text-decoration: none;
+  color: #007bff;
 }
